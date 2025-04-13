@@ -1,17 +1,5 @@
-// @ts-check
-import { test, expect } from '@playwright/test';
-const { LandingPage } = require('../pages/landingPage')
-import { Toast } from '../pages/Components'
+import { test, expect } from '../support';
 import { faker } from '@faker-js/faker';
-
-
-let landingPage
-let toast
-
-test.beforeEach(async ({ page }) => {  //utilizando obeforeEach para nao precisar declarar em todas as linhas a lcasse LandingPage
-  landingPage = new LandingPage(page)
-  toast = new Toast(page)
-})
 
 test('Deve cadastrar um lead na fila de espera', async ({ page }) => {
   const leadName = faker.person.fullName();
@@ -20,10 +8,10 @@ test('Deve cadastrar um lead na fila de espera', async ({ page }) => {
   //const landingPage = new LandingPage(page); //!removido pelo uso do beforeEach
   const message = 'Agradecemos por compartilhar seus dados conosco. Em breve, nossa equipe entrará em contato!'
 
-  await landingPage.visit();
-  await landingPage.openLeadModal();
-  await landingPage.submitLeadForm(leadName, leadEmail);
-  await toast.containText(message);
+  await page.landing.visit();
+  await page.landing.openLeadModal();
+  await page.landing.submitLeadForm(leadName, leadEmail);
+  await page.toast.containText(message);
 
 });
 
@@ -53,48 +41,46 @@ test('Não deve cadastrar quando um email ja existe', async ({ page, request }) 
 
   expect(newLead.ok()).toBeTruthy()
 
+  await page.landing.visit();
+  await page.landing.openLeadModal();
+  await page.landing.submitLeadForm(leadName, leadEmail);
 
-  await landingPage.visit();
-  await landingPage.openLeadModal();
-  await landingPage.submitLeadForm(leadName, leadEmail);
-
-  await toast.haveText(message);
+  await page.toast.containText(message);
 
 });
 
 test('Não deve cadastrar com email incorreto', async ({ page }) => {
 
-  await landingPage.visit();
-  await landingPage.openLeadModal();
-  await landingPage.submitLeadForm('Pedro Lima', 'pedroteste.com.br');
+  await page.landing.visit();
+  await page.landing.openLeadModal();
+  await page.landing.submitLeadForm('Pedro Lima', 'pedroteste.com.br');
 
-  await landingPage.alertHaveText('Email incorreto')
+  await page.landing.alertHaveText('Email incorreto')
 });
 
 test('Não deve cadastrar quando o nome não for preenchido', async ({ page }) => {
-  const landingPage = new LandingPage(page);
 
-  await landingPage.visit();
-  await landingPage.openLeadModal();
-  await landingPage.submitLeadForm('', 'pedro@teste.com.br');
+  await page.landing.visit();
+  await page.landing.openLeadModal();
+  await page.landing.submitLeadForm('', 'pedro@teste.com.br');
 
   await expect(page.locator('.alert')).toHaveText('Campo obrigatório')
 });
 
 test('Não deve cadastrar quando email não for preenchido', async ({ page }) => {
 
-  await landingPage.visit();
-  await landingPage.openLeadModal();
-  await landingPage.submitLeadForm('Pedro Lima', '');
+  await page.landing.visit();
+  await page.landing.openLeadModal();
+  await page.landing.submitLeadForm('Pedro Lima', '');
 
-  await landingPage.alertHaveText('Campo obrigatório')
+  await page.landing.alertHaveText('Campo obrigatório')
 });
 
 test('Não deve cadastrar quando nenhum campo for preenchido', async ({ page }) => {
 
-  await landingPage.visit();
-  await landingPage.openLeadModal();
-  await landingPage.submitLeadForm('', '');
+  await page.landing.visit();
+  await page.landing.openLeadModal();
+  await page.landing.submitLeadForm('', '');
 
-  await landingPage.alertHaveText(['Campo obrigatório', 'Campo obrigatório'])
+  await page.landing.alertHaveText(['Campo obrigatório', 'Campo obrigatório'])
 });

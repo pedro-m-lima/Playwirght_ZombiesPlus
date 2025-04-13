@@ -6,16 +6,13 @@ const { LoginPage } = require('../pages/LoginPage.js');
 const { LandingPage } = require('../pages/landingPage');//todo jeito antigo de importar
 
 const test = base.extend({
-    play: async ({ page }, use) => {
-        await use({
-            ...page,
+    page: async ({ page }, use) => {
+        await use(Object.assign(page, {
             landing: new LandingPage(page),
             login: new LoginPage(page),
             movies: new MoviesPage(page),
             toast: new Toast(page)
-        })
-
-
+        }));
     }
 })
 
