@@ -1,18 +1,22 @@
 const { test: base, expect } = require('@playwright/test')
 
-import { Toast } from '../pages/Components.js'; //todo jeito moderno de importar
-import { MoviesPage } from '../pages/MoviesPage.js';
-const { LoginPage } = require('../pages/LoginPage.js');
-const { LandingPage } = require('../pages/landingPage');//todo jeito antigo de importar
+import { Toast } from '../actions/Components.js'; //todo jeito moderno de importar
+import { Movies } from '../actions/Movies.js';
+const { Login } = require('../actions/Login.js');
+const { Landing, Leads } = require('../actions/leads.js');//todo jeito antigo de importar
 
 const test = base.extend({
     page: async ({ page }, use) => {
-        await use(Object.assign(page, {
-            landing: new LandingPage(page),
-            login: new LoginPage(page),
-            movies: new MoviesPage(page),
-            toast: new Toast(page)
-        }));
+
+        const context = page //adiciona udo que tem em page dentro da variavel context
+
+        //atribuindo page objects dentro de context
+        context['leads'] = new Leads(page),
+            context['login'] = new Login(page),
+            context['movies'] = new Movies(page),
+            context['toast'] = new Toast(page)
+
+        await use(context)
     }
 })
 

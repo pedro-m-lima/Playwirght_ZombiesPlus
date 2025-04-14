@@ -1,23 +1,23 @@
-const {expect} = require('@playwright/test')
+const { expect } = require('@playwright/test')
 
-export class LoginPage{
-    constructor(page){
+export class Login {
+    constructor(page) {
         this.page = page
     }
 
-    async visitLogin(){
+    async visitLogin() {
         await this.page.goto('http://localhost:3000/admin/login')
-        
+
         const loginform = this.page.locator('.login-form')
         await expect(loginform).toBeVisible()
     }
 
-    async submitLogin(email, senha){
+    async submitLogin(email, senha) {
 
-        if(email != ''){
+        if (email != '') {
             await this.page.getByPlaceholder("E-mail").fill(email)
         }
-        if(senha != ''){
+        if (senha != '') {
             await this.page.getByPlaceholder('senha').fill(senha)
         }
 
@@ -28,8 +28,13 @@ export class LoginPage{
 
     }
 
-    async alertHaveText(text){
+    async alertHaveText(text) {
         await expect(this.page.locator('span[class$="alert"]')).toHaveText(text)
+    }
+
+    async isLoggedIn() {
+        await this.page.waitForLoadState('networkidle') //!Garante com que todas as requisições foram feitas e esta em modo ocioso aguardando nova requisição.
+        await expect(this.page).toHaveURL(/.*admin/)
     }
 
 }

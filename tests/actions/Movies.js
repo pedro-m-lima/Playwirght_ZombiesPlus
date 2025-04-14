@@ -1,20 +1,23 @@
 import { expect } from "@playwright/test"
 
-export class MoviesPage {
+export class Movies {
     constructor(page) {
         this.page = page
     }
 
-    async isLoggedIn() {
-        await this.page.waitForLoadState('networkidle') //!Garante com que todas as requisições foram feitas e esta em modo ocioso aguardando nova requisição.
-        await expect(this.page).toHaveURL(/.*admin/)
+    async goForm() {
+        await this.page.locator('a[href$="register"]').click()
+        await expect(this.page.locator('header>h1')).toHaveText('Cadastrar novo Filme')
+    }
+
+    async submit() {
+        await this.page.getByRole('button', { name: 'Cadastrar' }).click()
     }
 
     async create(title, overview, company, release_year, featured, cover) {
 
         //Acessando pagina e validando cadastro
-        await this.page.locator('a[href$="register"]').click()
-        await expect(this.page.locator('header>h1')).toHaveText('Cadastrar novo Filme')
+        await this.goForm()
 
         //informando title and overview
         await this.page.getByLabel('Titulo do filme').fill(title)
@@ -32,7 +35,11 @@ export class MoviesPage {
         await this.page.locator('.react-select__option').filter({ hasText: release_year }).click()
 
         //Clicar em cadastrar
-        await this.page.getByRole('button', { name: 'Cadastrar' }).click()
+        await this.submit()
 
+    }
+
+    async alertHaveText(target) {
+        await expect(this.page.locator('.alert')).toHaveText(target)
     }
 }
