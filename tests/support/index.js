@@ -3,7 +3,7 @@ const { test: base, expect } = require('@playwright/test')
 import { Toast } from '../actions/Components.js'; //todo jeito moderno de importar
 import { Movies } from '../actions/Movies.js';
 const { Login } = require('../actions/Login.js');
-const { Landing, Leads } = require('../actions/leads.js');//todo jeito antigo de importar
+const { Leads } = require('../actions/leads.js');//todo jeito antigo de importar
 
 const test = base.extend({
     page: async ({ page }, use) => {

@@ -5,14 +5,20 @@ export class Login {
         this.page = page
     }
 
-    async visitLogin() {
+    async do(email, password) {
+        this.visit();
+        this.submit(email, password);
+        this.isLoggedIn();
+    }
+
+    async visit() {
         await this.page.goto('http://localhost:3000/admin/login')
 
         const loginform = this.page.locator('.login-form')
         await expect(loginform).toBeVisible()
     }
 
-    async submitLogin(email, senha) {
+    async submit(email, senha) {
 
         if (email != '') {
             await this.page.getByPlaceholder("E-mail").fill(email)
@@ -33,8 +39,8 @@ export class Login {
     }
 
     async isLoggedIn() {
-        await this.page.waitForLoadState('networkidle') //!Garante com que todas as requisições foram feitas e esta em modo ocioso aguardando nova requisição.
-        await expect(this.page).toHaveURL(/.*admin/)
+        await this.page.waitForLoadState('networkidle'); //!Garante com que todas as requisições foram feitas e esta em modo ocioso aguardando nova requisição.
+        await expect(this.page).toHaveURL(/.*admin/);
     }
 
 }

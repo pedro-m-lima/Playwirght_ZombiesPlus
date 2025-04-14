@@ -1,4 +1,4 @@
-import { test, expect } from '../support/index.js';
+import { test, expect } from '../support';
 
 import data from '../support/fixture/movies.json'
 const { executeSQL } = require('../support/database.js');
@@ -6,13 +6,11 @@ const { executeSQL } = require('../support/database.js');
 test('Deve poder cadastrar um filme', async ({ page }) => {
     const movie = data.create
 
-    //teste
+    //deleta dados da tabela movies
     await executeSQL(`DELETE from movies`)
 
     //é importante esta logado
-    await page.login.visitLogin()
-    await page.login.submitLogin('admin@zombieplus.com', 'pwd123')
-    await page.login.isLoggedIn()
+    await page.login.do('admin@zombieplus.com', 'pwd123')
 
     //Informe dados Filme
     await page.movies.create(movie.title, movie.overview, movie.company, movie.release_year, movie.featured, movie.cover)
@@ -24,9 +22,7 @@ test('Deve poder cadastrar um filme', async ({ page }) => {
 test('Não deve cadastrar quando não informar campos obrigatórios', async ({ page }) => {
 
     //é importante esta logado
-    await page.login.visitLogin()
-    await page.login.submitLogin('admin@zombieplus.com', 'pwd123')
-    await page.login.isLoggedIn()
+    await page.login.do('admin@zombieplus.com', 'pwd123')
 
     //submt form sem informar dados obrigatórios
     await page.movies.goForm()
