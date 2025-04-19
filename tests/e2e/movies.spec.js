@@ -10,7 +10,7 @@ test('Deve poder cadastrar um filme', async ({ page }) => {
     await executeSQL(`DELETE from movies`)
 
     //é importante esta logado
-    await page.login.do('admin@zombieplus.com', 'pwd123')
+    await page.login.do('admin@zombieplus.com', 'pwd123', 'Admin')
 
     //Informe dados Filme
     await page.movies.create(movie.title, movie.overview, movie.company, movie.release_year, movie.featured, movie.cover)
@@ -22,7 +22,7 @@ test('Deve poder cadastrar um filme', async ({ page }) => {
 test('Não deve cadastrar quando não informar campos obrigatórios', async ({ page }) => {
 
     //é importante esta logado
-    await page.login.do('admin@zombieplus.com', 'pwd123')
+    await page.login.do('admin@zombieplus.com', 'pwd123', 'Admin')
 
     //submt form sem informar dados obrigatórios
     await page.movies.goForm()
