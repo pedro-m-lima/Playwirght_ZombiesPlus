@@ -37,7 +37,10 @@ export class Movies {
         //select poster and input data
         await this.page.locator('input[name=cover]').setInputFiles('tests/support/fixture' + movie.cover)
 
-
+        //Marca Filme como favorito
+        if (movie.featured) {
+            await this.page.locator('.featured .react-switch').click()
+        }
 
         //Clicar em cadastrar
         await this.submit()
