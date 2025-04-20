@@ -13,7 +13,7 @@ test('Deve poder cadastrar um filme', async ({ page }) => {
     await page.login.do('admin@zombieplus.com', 'pwd123', 'Admin')
 
     //Informe dados Filme
-    await page.movies.create(movie.title, movie.overview, movie.company, movie.release_year, movie.featured, movie.cover)
+    await page.movies.create(movie)
 
     await page.toast.containText('Cadastro realizado com sucesso!')
 

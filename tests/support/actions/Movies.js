@@ -14,25 +14,30 @@ export class Movies {
         await this.page.getByRole('button', { name: 'Cadastrar' }).click()
     }
 
-    async create(title, overview, company, release_year, featured, cover) {
+    async create(movie) {
 
         //Acessando pagina e validando cadastro
         await this.goForm()
 
         //informando title and overview
-        await this.page.getByLabel('Titulo do filme').fill(title)
-        await this.page.getByLabel('Sinopse').fill(overview)
+        await this.page.getByLabel('Titulo do filme').fill(movie.title)
+        await this.page.getByLabel('Sinopse').fill(movie.overview)
 
         //seleciona um item "distribuido por: "
         await this.page.locator('#select_company_id .react-select__indicators').click()
 
         await this.page.locator('.react-select__option')
-            .filter({ hasText: company })
+            .filter({ hasText: movie.company })
             .click()
 
         //Selecionando ano de lançamento    
         await this.page.locator('#select_year .react-select__dropdown-indicator').click()
-        await this.page.locator('.react-select__option').filter({ hasText: release_year }).click()
+        await this.page.locator('.react-select__option').filter({ hasText: movie.release_year }).click()
+
+        //select poster and input data
+        await this.page.locator('input[name=cover]').setInputFiles('tests/support/fixture' + movie.cover)
+
+
 
         //Clicar em cadastrar
         await this.submit()
